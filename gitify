@@ -6,6 +6,15 @@ then
 	exit 1
 fi
 
+# Check that the folder is not on git yet
+if [ -d $1/.git ]
+then
+	echo "The folder is already on Git" 1>&2
+	exit 2
+fi
+
+cd $1
+git init .
 
 FILES=$(find . -type f)
 for f in $FILES
