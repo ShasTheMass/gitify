@@ -29,26 +29,23 @@ do
 	echo $f
 	if [ $CREATED -ne 0 ]
 	then
-		git add $f > /dev/null && \
-		git commit -m "$f created at $CREATED" > /dev/null && \
-		git filter-branch -f --env-filter "
-		export GIT_COMMITTER_DATE='$CREATED +0100'
-		export GIT_AUTHOR_DATE='$CREATED +0100'" HEAD^.. > /dev/null
+		VERB='created'
+		DATE=$CREATED
 	elif [ $MODIFIED -ne 0 ]
 	then
-		git add $f > /dev/null && \
-		git commit -m "$f modified at $MODIFIED" > /dev/null && \
-		git filter-branch -f --env-filter "
-		export GIT_COMMITTER_DATE='$MODIFIED +0100'
-		export GIT_AUTHOR_DATE='$MODIFIED +0100'" HEAD^.. > /dev/null
+		VERB='modified'
+		DATE=$MODIFIED
 	elif [ $CHANGED -ne 0 ]
 	then
-		git add $f > /dev/null && \
-		git commit -m "$f changed at $CHANGED" > /dev/null && \
-		git filter-branch -f --env-filter "
-		export GIT_COMMITTER_DATE='$CHANGED +0100'
-		export GIT_AUTHOR_DATE='$CHANGED +0100'" HEAD^.. > /dev/null
+		VERB='changed'
+		DATE=$CHANGED
 	fi
+
+	git add $f > /dev/null && \
+		git commit -m "$f $VERB at $DATE" > /dev/null && \
+		git filter-branch -f --env-filter "
+	export GIT_COMMITTER_DATE='$DATE +0100'
+	export GIT_AUTHOR_DATE='$DATE +0100'" HEAD^.. > /dev/null
 done
 
 # @TODO set github remote
