@@ -6,6 +6,8 @@ then
 	exit 1
 fi
 
+# @XXX check that folder exists
+
 # Check that the folder is not on git yet
 if [ -d $1/.git ]
 then
@@ -15,6 +17,8 @@ fi
 
 cd $1
 git init .
+# @TODO create github repo
+
 
 FILES=$(find . -type f)
 for f in $FILES
@@ -46,3 +50,8 @@ do
 		export GIT_AUTHOR_DATE='$CHANGED +0100'" HEAD^.. > /dev/null
 	fi
 done
+
+# @TODO set github remote
+# git remote add origin $GITHUB_URL
+# @TODO push to github
+# git push -u origin master
