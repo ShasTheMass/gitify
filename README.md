@@ -4,14 +4,14 @@ on2git.sh is a script that can convert your local folders into git based folders
 ## Usage
 - open terminal
 - clone on2git repo by running 
-> `git clone https://github.com/ShasTheMass/on2git.git`
+	> `git clone https://github.com/ShasTheMass/on2git.git`
 - cd into on2git folder
-> `cd on2git`
+	> `cd on2git`
 - run the on2git.sh command, passing the local folder location as the first argument and your github username as the second argument
-> `./on2git.sh [`you local folder location`]` `[` you github username `]`
+	> `./on2git.sh [`your local folder location`]` `[` your github username `]`
 
 If you came across access permission issues on the last step above, run the following command
-> `chmod u+x on2git.sh`
+	> `chmod u+x on2git.sh`
 Then repeat,
-> `./on2git.sh [`you local folder location`]` `[` you github username `]`
+	> `./on2git.sh [`your local folder location`]` `[` your github username `]`
 
