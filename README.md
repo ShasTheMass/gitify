@@ -11,7 +11,7 @@ on2git.sh is a script that can convert your local folders into git based folders
 	> `./on2git.sh [`your local folder location`]` `[` your github username `]`
 
 
-# Note
+### Note
 - If you came across access permission issues on the last step above, run the following command
 	> `chmod u+x on2git.sh`
 - Then repeat,
