@@ -6,8 +6,27 @@ then
 	exit 1
 fi
 
-#TODO: @XXX check that folder exists
+#check that folder exists
+# TODO: test this section
+if [ ! -d "$1" ]
+then
+	echo "The local folder does not exist" 1>&2
+	exit 1
+fi
 
+#check if github username exists
+HTTP_RESP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://api.github.com/users/"$2")
+if [ "$HTTP_RESP_CODE" == "404" ]
+	then echo "The provided github user name does not exist" 1>&2
+	exit 1
+elif [ "$HTTP_RESP_CODE" == "200" ]
+	then echo "The provided github user name exists" 1>&2
+else
+	echo "Something went wrong"
+	exit 2
+fi
+
+#check if the local folder .git initiated
 if [ -d "$1/.git" ]
 then
 	echo "The folder is already on Git" 1>&2
@@ -25,12 +44,11 @@ FILES=$(find . -not -iwholename '*.git*' -type f)
 for f in $FILES
 do
 	CREATED=$(stat -f %SB $f)
-	echo $CREATED
 	MODIFIED=$(stat -f %Sm $f)
-	echo $MODIFIED
 	CHANGED=$(stat -f %Sc $f)
-	echo $CHANGED
+
 	echo $f
+
 	if [ "$CREATED" != "0" ]
 	then
 		VERB='created'
@@ -49,5 +67,7 @@ do
 		git commit -m "$f $VERB at $DATE" > /dev/null && \
 		git filter-branch -f --env-filter "export GIT_COMMITTER_DATE='$DATE +0100' export GIT_AUTHOR_DATE='$DATE +0100'" HEAD^.. > /dev/null
 done
+
+#TODO: create a readme file and commit it
 
 git push -u origin master
