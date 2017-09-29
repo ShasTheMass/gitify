@@ -6,40 +6,40 @@ then
 	exit 1
 fi
 
-# @XXX check that folder exists
+#TODO: @XXX check that folder exists
 
-# Check that the folder is not on git yet
-if [ -d $1/.git ]
+if [ -d "$1/.git" ]
 then
 	echo "The folder is already on Git" 1>&2
 	exit 2
 fi
 
-cd $1
+cd "$1"
 git init .
 REPO=$(basename $1)
+#TODO: Check that the folder is not on github yet
 git remote add origin https://github.com/$2/${REPO}.git
 curl -u "$2" https://api.github.com/user/repos -d "{\"name\":\"$REPO\"}"
 
-FILES=$(find . -type f)
+FILES=$(find . -not -iwholename '*.git*' -type f)
 for f in $FILES
 do
-	CREATED=$(stat -c '%W' $f)
+	CREATED=$(stat -f %SB $f)
 	echo $CREATED
-	MODIFIED=$(stat -c '%Y' $f)
+	MODIFIED=$(stat -f %Sm $f)
 	echo $MODIFIED
-	CHANGED=$(stat -c '%Z' $f)
+	CHANGED=$(stat -f %Sc $f)
 	echo $CHANGED
 	echo $f
-	if [ $CREATED -ne 0 ]
+	if [ "$CREATED" != "0" ]
 	then
 		VERB='created'
 		DATE=$CREATED
-	elif [ $MODIFIED -ne 0 ]
+	elif [ "$MODIFIED" != "0" ]
 	then
 		VERB='modified'
 		DATE=$MODIFIED
-	elif [ $CHANGED -ne 0 ]
+	elif [ "$CHANGED" != "0" ]
 	then
 		VERB='changed'
 		DATE=$CHANGED
@@ -47,9 +47,7 @@ do
 
 	git add $f > /dev/null && \
 		git commit -m "$f $VERB at $DATE" > /dev/null && \
-		git filter-branch -f --env-filter "
-	export GIT_COMMITTER_DATE='$DATE +0100'
-	export GIT_AUTHOR_DATE='$DATE +0100'" HEAD^.. > /dev/null
+		git filter-branch -f --env-filter "export GIT_COMMITTER_DATE='$DATE +0100' export GIT_AUTHOR_DATE='$DATE +0100'" HEAD^.. > /dev/null
 done
 
 git push -u origin master
