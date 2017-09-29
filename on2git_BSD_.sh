@@ -21,7 +21,7 @@ REPO=$(basename $1)
 git remote add origin https://github.com/$2/${REPO}.git
 curl -u "$2" https://api.github.com/user/repos -d "{\"name\":\"$REPO\"}"
 
-FILES=$(find . -type f)
+FILES=$(find . -not -iwholename '*.git*' -type f)
 for f in $FILES
 do
 	CREATED=$(stat -f %SB $f)
