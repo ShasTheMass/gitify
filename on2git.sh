@@ -25,12 +25,11 @@ FILES=$(find . -not -iwholename '*.git*' -type f)
 for f in $FILES
 do
 	CREATED=$(stat -c '%W' $f)
-	echo $CREATED
 	MODIFIED=$(stat -c '%Y' $f)
-	echo $MODIFIED
 	CHANGED=$(stat -c '%Z' $f)
-	echo $CHANGED
+
 	echo $f
+
 	if [ $CREATED -ne 0 ]
 	then
 		VERB='created'
